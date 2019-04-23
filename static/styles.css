@@ -1,0 +1,20 @@
+body {
+    background-color: #f6eeee;
+}
+
+main {
+    /* center contents */
+    text-align: center;
+    vertical-align: middle;
+}
+
+.portrait {
+    height: 40px;
+    -webkit-transition: -webkit-transform .2s ease-in-out;
+    transition: transform .2s ease-in-out;
+}
+
+.portrait:hover {
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+}

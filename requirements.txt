@@ -1,0 +1,6 @@
+cs50
+Flask
+requests
+oddscalculator
+sqlite3
+datetime

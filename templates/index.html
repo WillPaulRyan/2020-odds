@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block title %}2020 Odds{% endblock %}
+
+{% block main %}
+    <h1>2020 Presidential Election Odds</h1>
+    <p>They say the people best at predicting the future are bookmakers, because they have money at stake.
+    This webapp tracks bookmaker projections for the upcoming US Presidential Election</p>
+    <br>
+    <table class="table table-hover">
+        <caption>Updated: {{ oddsInfo["datetime"] }}</caption>
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">2020 Election Odds</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="row-trump">
+                <th scope="row"><img class="portrait trump" src="./static/candidates/trump.png"></th>
+                <td>Donald Trump</td>
+                <td>{{ oddsInfo["trump"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait sanders" src="./static/candidates/sanders.png"></th>
+                <td>Bernie Sanders</td>
+                <td>{{ oddsInfo["sanders"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait biden" src="./static/candidates/biden.png"></th>
+                <td>Joe Biden</td>
+                <td>{{ oddsInfo["biden"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait harris" src="./static/candidates/harris.png"></th>
+                <td>Kamala Harris</td>
+                <td>{{ oddsInfo["harris"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait buttigieg" src="./static/candidates/buttigieg.png"></th>
+                <td>Pete Buttigieg</td>
+                <td>{{ oddsInfo["buttigieg"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait orourke" src="./static/candidates/orourke.png"></th>
+                <td>Beto O'Rourke</td>
+                <td>{{ oddsInfo["orourke"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait yang" src="./static/candidates/yang.png"></th>
+                <td>Andrew Yang</td>
+                <td>{{ oddsInfo["yang"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait warren" src="./static/candidates/warren.png"></th>
+                <td>Elizabeth Warren</td>
+                <td>{{ oddsInfo["warren"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait klobuchar" src="./static/candidates/klobuchar.png"></th>
+                <td>Amy Klobuchar</td>
+                <td>{{ oddsInfo["klobuchar"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait gabbard" src="./static/candidates/gabbard.png"></th>
+                <td>Tulsi Gabbard</td>
+                <td>{{ oddsInfo["gabbard"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait booker" src="./static/candidates/booker.png"></th>
+                <td>Cory Booker</td>
+                <td>{{ oddsInfo["booker"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait gillibrand" src="./static/candidates/gillibrand.png"></th>
+                <td>Kirsten Gillibrand</td>
+                <td>{{ oddsInfo["gillibrand"] }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><img class="portrait castro" src="./static/candidates/castro.png"></th>
+                <td>Julián Castro</td>
+                <td>{{ oddsInfo["castro"] }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
