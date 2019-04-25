@@ -36,6 +36,7 @@ session = Session()
 
 
 class NewLog(db.Model):
+    __tablename__ = 'election'
     datetime = Column(DateTime, primary_key=True)
     trump = Column(Integer)
     warren = Column(Integer)
@@ -130,7 +131,8 @@ def lookup():
 
         # Insert data into database
         #executemany("INSERT INTO election(datetime, trump, warren, booker, biden, sanders, klobuchar, harris, gillibrand, gabbard, orourke, yang, buttigieg, castro) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [oddsValues])
-        session.add(newValues)
+        #session.add(newValues)
+        session.add(NewLog(datetime=timeNow, trump=int(trump.american), warren=int(warren.american), booker=int(booker.american), biden=int(biden.american), sanders=int(sanders.american), klobuchar=int(klobuchar.american), harris=int(harris.american), gillibrand=int(gillibrand.american), gabbard=int(gabbard.american), orourke=int(orourke.american), yang=int(yang.american), buttigieg=int(buttigieg.american), castro=int(castro.american)))
         session.flush()
 
         # Return values in an array
