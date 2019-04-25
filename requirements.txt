@@ -4,3 +4,4 @@ flask
 requests
 oddscalculator
 gunicorn
+psycopg2
