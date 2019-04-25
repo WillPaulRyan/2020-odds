@@ -127,13 +127,12 @@ def lookup():
         
         # Return values in an array
         session.close()
-        return [timeNow + oddsValues]
+        return oddsValues
 
     else:
 
         # Return previous values in an array
         session.close()
-
         return currentData
 
 
