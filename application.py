@@ -1,5 +1,6 @@
 import os
 
+from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request
 import requests
 import sqlite3
@@ -20,6 +21,8 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+
+db = SQL("sqlite:///election.db")
 
 
 def call():
@@ -43,36 +46,30 @@ def call():
 def convertToStrings(A):
     """Convert list of ints into proper odds format"""
 
-    # Initialize new list
-    B = []
-
     for thing in A:
         try:
-            if thing >= 0:
-                B += ['+' + str(thing)]
+            if A[thing] >= 0:
+                A[thing] = '+' + str(A[thing])
             else:
-                B += [str(thing)]
+                A[thing] = str(A[thing])
         except:
-            B += [thing]
-    return B
+            pass
+    return (A)
 
 
 def lookup():
     """Look up odds"""
 
     # Connect to database
-    conn = sqlite3.connect('election.db')
-    c = conn.cursor()
 
     # Pull most recent entry
-    c.execute("SELECT * FROM election ORDER BY datetime DESC LIMIT 1")
-    currentData = c.fetchone()
+    currentData = db.execute("SELECT * FROM election ORDER BY datetime DESC LIMIT 1")[0]
 
     # Date testing info
     timeFormat = '%Y-%m-%d %H:%M:%S'
     timeNow = datetime.strftime(datetime.utcnow(), timeFormat)
     timeLimit = timedelta(days=2)
-    timeElapsed = datetime.strptime(timeNow, timeFormat) - datetime.strptime(currentData[0], timeFormat)
+    timeElapsed = datetime.strptime(timeNow, timeFormat) - datetime.strptime(currentData['datetime'], timeFormat)
 
     # If greater than two days old
     if timeElapsed >= timeLimit:
@@ -99,39 +96,15 @@ def lookup():
         oddsValues = [timeNow, int(trump.american), int(warren.american), int(booker.american), int(biden.american), int(sanders.american), int(klobuchar.american), int(harris.american), int(gillibrand.american), int(gabbard.american), int(orourke.american), int(yang.american), int(buttigieg.american), int(castro.american)]
 
         # Insert data into database
-        c.executemany("INSERT INTO election(datetime, trump, warren, booker, biden, sanders, klobuchar, harris, gillibrand, gabbard, orourke, yang, buttigieg, castro) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [oddsValues])
-        conn.commit()
+        db.executemany("INSERT INTO election(datetime, trump, warren, booker, biden, sanders, klobuchar, harris, gillibrand, gabbard, orourke, yang, buttigieg, castro) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [oddsValues])
 
         # Return values in an array
-        conn.close()
         return oddsValues
 
     else:
 
         # Return previous values in an array
-        conn.close()
         return currentData
-
-
-def makeDict(A):
-    """Turn the list into a dictionary with readable labels"""
-
-    return {
-        "datetime": A[0],
-        "trump": A[1],
-        "warren": A[2],
-        "booker": A[3],
-        "biden": A[4],
-        "sanders": A[5],
-        "klobuchar": A[6],
-        "harris": A[7],
-        "gillibrand": A[8],
-        "gabbard": A[9],
-        "orourke": A[10],
-        "yang": A[11],
-        "buttigieg": A[12],
-        "castro": A[13],
-    }
 
 
 def timeConvert(time):
@@ -147,7 +120,6 @@ def index():
     """Show odds"""
 
     oddsInfo = convertToStrings(lookup())
-    oddsInfo[0] = timeConvert(oddsInfo[0])
-    oddsInfo = makeDict(oddsInfo)
+    oddsInfo['datetime'] = timeConvert(oddsInfo['datetime'])
 
     return render_template("index.html", oddsInfo=oddsInfo)
