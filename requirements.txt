@@ -3,3 +3,4 @@ SQLAlchemy
 flask
 requests
 oddscalculator
+gunicorn
