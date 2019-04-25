@@ -1,12 +1,14 @@
 import os
 
 from flask import Flask, flash, jsonify, redirect, render_template, request
-from flask_sqlalchemy import sqlalchemy
+import flask_sqlalchemy
 from sqlalchemy.orm import sessionmaker
 import requests
 from oddscalculator import DecimalOdds, AmericanOdds
 from datetime import datetime, timedelta
 from sqlalchemy import Column, create_engine, DateTime, desc, Integer, MetaData, select, Table
+
+db = flask_sqlalchemy
 
 # Configure application
 app = Flask(__name__)
@@ -33,7 +35,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-class NewLog():
+class NewLog(db.Model):
     datetime = Column(DateTime, primary_key=True)
     trump = Column(Integer)
     warren = Column(Integer)
