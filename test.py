@@ -4,6 +4,7 @@ from flask import Flask, flash, jsonify, redirect, render_template, request
 from flask_sqlalchemy import sqlalchemy
 from sqlalchemy import *
 from application import timeConvert
+from datetime import datetime
 
 # Configure application
 app = Flask(__name__)
@@ -20,4 +21,4 @@ ResultSet = ResultProxy.fetchone()
 
 A = ResultSet
 
-print (timeConvert(A[0]))
+print (datetime.strftime(A[0], '%Y-%m-%d %H:%M:%S'))

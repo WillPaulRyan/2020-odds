@@ -1,6 +1,5 @@
 flask_sqlalchemy
 SQLAlchemy
-sqlalchemy.orm
 flask
 requests
 oddscalculator

@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 import requests
 from oddscalculator import DecimalOdds, AmericanOdds
 from datetime import datetime, timedelta
-from sqlalchemy import Column, create_engine, DateTime, Integer, MetaData, Table
+from sqlalchemy import Column, create_engine, DateTime, desc, Integer, MetaData, select, Table
 
 # Configure application
 app = Flask(__name__)
@@ -28,7 +28,7 @@ metadata = MetaData()
 election = Table('election', metadata, autoload = True, autoload_with=engine)
 
 # create a configured "Session" class
-Session = sessionmaker(bind=some_engine)
+Session = sessionmaker(bind=engine)
 # create a Session
 session = Session()
 
@@ -87,13 +87,17 @@ def lookup():
     # Connect to database
 
     # Pull most recent entry
-    currentData = db.execute("SELECT * FROM election ORDER BY datetime DESC LIMIT 1")[0]
+    query = select([election]).order_by(desc(election.columns.datetime))
+    ResultProxy = connection.execute(query)
+    currentData = ResultProxy.fetchone()
+
+    oldTime = datetime.strftime(currentData[0], '%Y-%m-%d %H:%M:%S')
 
     # Date testing info
     timeFormat = '%Y-%m-%d %H:%M:%S'
     timeNow = datetime.strftime(datetime.utcnow(), timeFormat)
     timeLimit = timedelta(days=2)
-    timeElapsed = datetime.strptime(timeNow, timeFormat) - datetime.strptime(currentData['datetime'], timeFormat)
+    timeElapsed = datetime.strptime(timeNow, timeFormat) - datetime.strptime(oldTime, timeFormat)
 
     # If greater than two days old
     if timeElapsed >= timeLimit:
