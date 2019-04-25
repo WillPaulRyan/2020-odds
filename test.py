@@ -1,12 +1,23 @@
-# Initialize new list
-A = {'datetime': '2019-04-25 15:31:48', 'trump': 135, 'warren': 4950, 'booker': 14400, 'biden': 925, 'sanders': 710, 'klobuchar': 9400, 'harris': 1350, 'gillibrand': 30900, 'gabbard': 8900, 'orourke': 2450, 'yang': 3300, 'buttigieg': 1250, 'castro': 69900}
+import os
 
-for thing in A:
-    try:
-        if A[thing] >= 0:
-            A[thing] = '+' + str(A[thing])
-        else:
-            A[thing] = str(A[thing])
-    except:
-        pass
-print (A)
+from flask import Flask, flash, jsonify, redirect, render_template, request
+from flask_sqlalchemy import sqlalchemy
+from sqlalchemy import *
+from application import timeConvert
+
+# Configure application
+app = Flask(__name__)
+
+engine = create_engine('postgres://jzqvuqvziqikpj:608cb6df0cb2c3258dfb5d06db73047dd710b5d698c90a81b8f25bf9dadaf9fe@ec2-107-20-177-161.compute-1.amazonaws.com:5432/d355cs90th9vsm')
+connection = engine.connect()
+metadata = MetaData()
+election = Table('election', metadata, autoload = True, autoload_with=engine)
+
+query = select([election]).order_by(desc(election.columns.datetime))
+
+ResultProxy = connection.execute(query)
+ResultSet = ResultProxy.fetchone()
+
+A = ResultSet
+
+print (timeConvert(A[0]))

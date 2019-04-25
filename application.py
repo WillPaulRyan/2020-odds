@@ -1,12 +1,12 @@
 import os
 
-from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request
+from flask_sqlalchemy import sqlalchemy
+from sqlalchemy.orm import sessionmaker
 import requests
-import sqlite3
 from oddscalculator import DecimalOdds, AmericanOdds
 from datetime import datetime, timedelta
-
+from sqlalchemy import Column, create_engine, DateTime, Integer, MetaData, Table
 
 # Configure application
 app = Flask(__name__)
@@ -22,9 +22,33 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-db = SQL("postgres://jzqvuqvziqikpj:608cb6df0cb2c3258dfb5d06db73047dd710b5d698c90a81b8f25bf9dadaf9fe@ec2-107-20-177-161.compute-1.amazonaws.com:5432/d355cs90th9vsm?sslmode=require")
+engine = create_engine('postgres://jzqvuqvziqikpj:608cb6df0cb2c3258dfb5d06db73047dd710b5d698c90a81b8f25bf9dadaf9fe@ec2-107-20-177-161.compute-1.amazonaws.com:5432/d355cs90th9vsm')
+connection = engine.connect()
+metadata = MetaData()
+election = Table('election', metadata, autoload = True, autoload_with=engine)
+
+# create a configured "Session" class
+Session = sessionmaker(bind=some_engine)
+# create a Session
+session = Session()
 
 
+class NewLog():
+    datetime = Column(DateTime, primary_key=True)
+    trump = Column(Integer)
+    warren = Column(Integer)
+    booker = Column(Integer)
+    biden = Column(Integer)
+    sanders = Column(Integer)
+    klobuchar = Column(Integer)
+    harris = Column(Integer)
+    gillibrand = Column(Integer)
+    gabbard = Column(Integer)
+    orourke = Column(Integer)
+    yang = Column(Integer)
+    buttigieg = Column(Integer)
+    castro = Column(Integer)
+    
 def call():
     """Call the API"""
 
@@ -94,13 +118,17 @@ def lookup():
         castro = DecimalOdds(newData["juliancastro"][1])
 
         # Finish conversion and prepare data to be put in database
-        oddsValues = [timeNow, int(trump.american), int(warren.american), int(booker.american), int(biden.american), int(sanders.american), int(klobuchar.american), int(harris.american), int(gillibrand.american), int(gabbard.american), int(orourke.american), int(yang.american), int(buttigieg.american), int(castro.american)]
+        #oddsValues = [timeNow, int(trump.american), int(warren.american), int(booker.american), int(biden.american), int(sanders.american), int(klobuchar.american), int(harris.american), int(gillibrand.american), int(gabbard.american), int(orourke.american), int(yang.american), int(buttigieg.american), int(castro.american)]
+
+        newValues = NewLog(timeNow, int(trump.american), int(warren.american), int(booker.american), int(biden.american), int(sanders.american), int(klobuchar.american), int(harris.american), int(gillibrand.american), int(gabbard.american), int(orourke.american), int(yang.american), int(buttigieg.american), int(castro.american))
 
         # Insert data into database
-        db.executemany("INSERT INTO election(datetime, trump, warren, booker, biden, sanders, klobuchar, harris, gillibrand, gabbard, orourke, yang, buttigieg, castro) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [oddsValues])
+        #executemany("INSERT INTO election(datetime, trump, warren, booker, biden, sanders, klobuchar, harris, gillibrand, gabbard, orourke, yang, buttigieg, castro) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [oddsValues])
+        session.add(newValues)
+        session.flush()
 
         # Return values in an array
-        return oddsValues
+        return newValues
 
     else:
 
