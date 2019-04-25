@@ -81,7 +81,7 @@ def lookup():
     session = Session()    
 
     # Pull most recent entry
-    query = select([election]).order_by(desc(election.columns.datetime))
+    query = select([election]).order_by(desc(election.columns.timestamp))
     ResultProxy = connection.execute(query)
     currentData = ResultProxy.fetchone()
 
@@ -149,7 +149,10 @@ def timeConvert(time):
 def index():
     """Show odds"""
 
+
     oddsInfo = convertToStrings(lookup())
     oddsInfo['datetime'] = timeConvert(oddsInfo['datetime'])
+
+    print ("oddsInfo = ", oddsInfo)
 
     return render_template("index.html", oddsInfo=oddsInfo)
