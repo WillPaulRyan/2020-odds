@@ -127,7 +127,7 @@ def lookup():
         # Finish conversion and prepare data to be put in database
         #oddsValues = [timeNow, int(trump.american), int(warren.american), int(booker.american), int(biden.american), int(sanders.american), int(klobuchar.american), int(harris.american), int(gillibrand.american), int(gabbard.american), int(orourke.american), int(yang.american), int(buttigieg.american), int(castro.american)]
 
-        newValues = NewLog(timeNow, int(trump.american), int(warren.american), int(booker.american), int(biden.american), int(sanders.american), int(klobuchar.american), int(harris.american), int(gillibrand.american), int(gabbard.american), int(orourke.american), int(yang.american), int(buttigieg.american), int(castro.american))
+        newValues = [timeNow, int(trump.american), int(warren.american), int(booker.american), int(biden.american), int(sanders.american), int(klobuchar.american), int(harris.american), int(gillibrand.american), int(gabbard.american), int(orourke.american), int(yang.american), int(buttigieg.american), int(castro.american)]
 
         # Insert data into database
         #executemany("INSERT INTO election(datetime, trump, warren, booker, biden, sanders, klobuchar, harris, gillibrand, gabbard, orourke, yang, buttigieg, castro) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [oddsValues])
