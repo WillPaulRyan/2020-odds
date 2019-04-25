@@ -83,12 +83,11 @@ def lookup():
     # Pull most recent entry
     query = select([election]).order_by(desc(election.columns.timestamp))
     ResultProxy = connection.execute(query)
-    currentData = ResultProxy.fetchone()
-
-    oldTime = datetime.strftime(currentData[0], '%Y-%m-%d %H:%M:%S')
+    proxy = ResultProxy.fetchone()
 
     # Date testing info
     timeFormat = '%Y-%m-%d %H:%M:%S'
+    oldTime = datetime.strftime(proxy[0], timeFormat)
     timeNow = datetime.strftime(datetime.utcnow(), timeFormat)
     timeLimit = timedelta(days=2)
     timeElapsed = datetime.strptime(timeNow, timeFormat) - datetime.strptime(oldTime, timeFormat)
@@ -130,11 +129,22 @@ def lookup():
         return oddsValues
 
     else:
+        # Put data in usable format
+        currentData = [oldTime]
+        for column in proxy[1:]:
+            currentData = currentData + [column]
 
         # Return previous values in an array
         session.close()
         return currentData
 
+
+def makeDict(A):
+    """Turn the list into a dictionary"""
+
+    B = {'timestamp':A[0], 'trump':A[1], 'warren':A[2], 'booker':A[3], 'biden':A[4], 'sanders':A[5], 'klobuchar':A[6], 'harris':A[7], 'gillibrand':A[8], 'gabbard':A[9], 'orourke':A[10], 'yang':A[11], 'buttigieg':A[12], 'castro':A[13]}
+    
+    return B        
 
 def timeConvert(time):
     """Convert time to a better format"""
@@ -148,10 +158,7 @@ def timeConvert(time):
 def index():
     """Show odds"""
 
-
     oddsInfo = convertToStrings(lookup())
-    oddsInfo['datetime'] = timeConvert(oddsInfo['datetime'])
+    oddsInfo[0] = timeConvert(oddsInfo[0])
 
-    print ("oddsInfo = ", oddsInfo)
-
-    return render_template("index.html", oddsInfo=oddsInfo)
+    return render_template("index.html", oddsInfo=makeDict(oddsInfo))
