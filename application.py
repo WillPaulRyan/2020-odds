@@ -133,7 +133,7 @@ def lookup():
         #executemany("INSERT INTO election(datetime, trump, warren, booker, biden, sanders, klobuchar, harris, gillibrand, gabbard, orourke, yang, buttigieg, castro) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [oddsValues])
         #session.add(newValues)
         session.add(NewLog(newValues)
-        session.commit()
+        session.flush()
 
         # Return values in an array
         return newValues
