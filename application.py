@@ -22,7 +22,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-db = SQL("sqlite:///election.db")
+db = SQL("    postgres://jzqvuqvziqikpj:608cb6df0cb2c3258dfb5d06db73047dd710b5d698c90a81b8f25bf9dadaf9fe@ec2-107-20-177-161.compute-1.amazonaws.com:5432/d355cs90th9vsm?sslmode=require")
 
 
 def call():
