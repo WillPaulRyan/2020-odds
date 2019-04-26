@@ -63,7 +63,7 @@ def lookup():
     session = Session()    
 
     # Pull most recent entry
-    query = select([election]).order_by(desc(election.columns.timestamp))
+    query = select([election]).order_by(desc(election.columns.timestamp)) # VS Code says "election" has an error, but it doesn't
     ResultProxy = connection.execute(query)
     proxy = ResultProxy.fetchone()
 
