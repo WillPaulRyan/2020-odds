@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 from sqlalchemy import Column, create_engine, DateTime, desc, Integer, MetaData, select, Table
 from NewLog import NewLog
 
+from helpers import candidateSort, convertToStrings, timeConvert
+
 # Configure application
 app = Flask(__name__)
 
@@ -32,20 +34,6 @@ def call():
         return pull["data"]
     except requests.exceptions.RequestException as e:
         return e
-
-
-def convertToStrings(A):
-    """Convert list of ints into proper odds format"""
-
-    for thing in A:
-        try:
-            if A[thing] >= 0:
-                A[thing] = '+' + str(A[thing])
-            else:
-                A[thing] = str(A[thing])
-        except:
-            pass
-    return (A)
 
 
 def lookup():
@@ -118,26 +106,11 @@ def lookup():
         return currentData
 
 
-def makeDict(A):
-    """Turn the list into a dictionary"""
-
-    B = {'timestamp':A[0], 'trump':A[1], 'warren':A[2], 'booker':A[3], 'biden':A[4], 'sanders':A[5], 'klobuchar':A[6], 'harris':A[7], 'gillibrand':A[8], 'gabbard':A[9], 'orourke':A[10], 'yang':A[11], 'buttigieg':A[12], 'castro':A[13]}
-    
-    return B        
-
-def timeConvert(time):
-    """Convert time to a better format"""
-
-    FMTin = '%Y-%m-%d %H:%M:%S'
-    FMTout = '%m/%d/%y'
-
-    return datetime.strftime(datetime.strptime(time, FMTin), FMTout)
 
 @app.route("/")
 def index():
     """Show odds"""
 
-    oddsInfo = convertToStrings(lookup())
-    oddsInfo[0] = timeConvert(oddsInfo[0])
+    updateDate, oddsInfo = candidateSort(lookup)
 
-    return render_template("index.html", oddsInfo=makeDict(oddsInfo))
+    return render_template("index.html", updateDate=timeConvert(updateDate), oddsInfo=convertToStrings(oddsInfo))
