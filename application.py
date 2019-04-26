@@ -111,6 +111,6 @@ def lookup():
 def index():
     """Show odds"""
 
-    updateDate, oddsInfo = candidateSort(lookup)
+    updateDate, oddsInfo = candidateSort(lookup())
 
     return render_template("index.html", updateDate=timeConvert(updateDate), oddsInfo=convertToStrings(oddsInfo))
