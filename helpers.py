@@ -13,10 +13,10 @@ def convertToStrings(A):
     """Convert list of ints into proper odds-formatted strings"""
 
     for candidate in A:
-        if A[candidate][2] >= 0:
-            A[candidate][2] = '+' + str(A[candidate][2])
+        if candidate[2] >= 0:
+            candidate[2] = '+' + str(candidate[2])
         else:
-            A[candidate][2] = str(A[candidate][2])
+            candidate[2] = str(candidate[2])
     return A
 
 
